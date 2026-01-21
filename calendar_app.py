@@ -1,9 +1,8 @@
 
 
 
-# calendar_app.py
 import calendar
-from datetime import datetime
+from datetime import datetime, date
 
 # =====================
 # Constants
@@ -16,13 +15,22 @@ MAX_YEAR = 9999
 # Validation Helpers
 # =====================
 def is_valid_year(year: int) -> bool:
-    """Return True if year is within allowed range."""
+    """Check whether a year is within the supported range."""
     return MIN_YEAR <= year <= MAX_YEAR
 
 
 def is_valid_month(month: int) -> bool:
-    """Return True if month is between 1 and 12."""
+    """Check whether a month value is valid (1–12)."""
     return 1 <= month <= 12
+
+
+def is_valid_date(year: int, month: int, day: int) -> bool:
+    """Validate whether a full date actually exists."""
+    try:
+        date(year, month, day)
+        return True
+    except ValueError:
+        return False
 
 
 # =====================
@@ -34,19 +42,19 @@ def get_month_calendar(year: int, month: int) -> str:
 
 
 def get_year_calendar(year: int) -> str:
-    """Return a formatted calendar for a full year."""
+    """Return a formatted calendar for an entire year."""
     return calendar.calendar(year)
 
 
 def get_today_info() -> str:
-    """Return today's date with weekday."""
+    """Return today's date with the weekday name."""
     today = datetime.now()
     weekday = calendar.day_name[today.weekday()]
     return f"Today is {weekday}, {today.day}-{today.month}-{today.year}"
 
 
 def get_weekday(year: int, month: int, day: int) -> str:
-    """Return weekday name for a given date."""
+    """Return the weekday name for a valid date."""
     weekday_index = calendar.weekday(year, month, day)
     return calendar.day_name[weekday_index]
 
@@ -55,7 +63,7 @@ def get_weekday(year: int, month: int, day: int) -> str:
 # Input Utilities
 # =====================
 def get_int_input(prompt: str) -> int:
-    """Safely get an integer from the user."""
+    """Safely prompt the user for an integer."""
     while True:
         try:
             return int(input(prompt))
@@ -67,7 +75,7 @@ def get_int_input(prompt: str) -> int:
 # Menu Handlers
 # =====================
 def show_menu() -> None:
-    """Display the main menu."""
+    """Display the main application menu."""
     print("\n📅 Simple Calendar App")
     print("1. View a month")
     print("2. View a year")
@@ -80,7 +88,7 @@ def view_month() -> None:
     year = get_int_input("Enter year (e.g., 2025): ")
     month = get_int_input("Enter month (1-12): ")
 
-    if not (is_valid_year(year) and is_valid_month(month)):
+    if not is_valid_year(year) or not is_valid_month(month):
         print("❌ Invalid year or month.")
         return
 
@@ -102,11 +110,12 @@ def find_weekday_handler() -> None:
     month = get_int_input("Enter month: ")
     day = get_int_input("Enter day: ")
 
-    try:
-        weekday = get_weekday(year, month, day)
-        print(f"📆 That date falls on a {weekday}")
-    except ValueError:
+    if not is_valid_date(year, month, day):
         print("❌ Invalid date entered.")
+        return
+
+    weekday = get_weekday(year, month, day)
+    print(f"📆 That date falls on a {weekday}")
 
 
 # =====================
@@ -135,8 +144,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
