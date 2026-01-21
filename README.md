@@ -1,5 +1,6 @@
 # Calendar Application
-
+## Contributing
+Please open an issue before submitting a pull request.
 ## Description
 This project is a simple calendar application designed to help users manage dates and events efficiently. The application allows users to view calendar information and interact with dates in a clear and structured way. It was built to demonstrate core programming concepts as well as proper use of GitHub version control and documentation.
 
